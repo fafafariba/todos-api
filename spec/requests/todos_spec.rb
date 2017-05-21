@@ -23,11 +23,11 @@ RSpec.describe 'Todos API', type: :request do
 	describe 'GET /todos/:id' do
 		before { get "/todos/#{todo_id}" }
 
-		context 'when teh record exists' do
+		context 'when the record exists' do
 			it 'returns the todo' do
 				# `json` custom helper to parse JSON res
 				expect(json).not_to be_empty
-				expect(json['id'].size).to eq(todo_id)
+				expect(json['id']).to eq(todo_id)
 			end
 
 			it 'returns status code 200' do
@@ -77,27 +77,33 @@ RSpec.describe 'Todos API', type: :request do
 	end
 	
 	describe 'PUT /todos/:id' do 
-		let(:valid_attributes) { { title: 'Groceries' } }
+		let(:valid_attributes) { { title: 'Do groceries' } }
 
 		context 'when the record exists do' do
 			before { put "/todos/#{todo_id}", params: valid_attributes }
 
 			it 'updates the record' do
-				expect(response.body
-				).to be_empty
+				puts response.body
+				expect(response.body).to match(/Update Successful/)
 			end
 
 			it 'returns status code 204' do
-				expect(response).to have_http_status(204)
+				expect(response).to have_http_status(200)
 			end
 		end
 	end
 	
 	describe 'DELETE /todos/:id' do
-		before { delete "todos/#{todo_id}" }
+		before { delete "/todos/#{todo_id}" }
+
+		it 'deletes the recrod' do
+			puts response.body
+			expect(response.body).to match(/Delete Successful/)
+		end
+		
 
 		it 'returns status code 204' do
-			expect(response).to have_http_status(204)
+			expect(response).to have_http_status(200)
 		end
 	end
 end

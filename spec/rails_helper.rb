@@ -70,6 +70,9 @@ RSpec.configure do |config|
   # FactoryGirl methods
   config.include FactoryGirl::Syntax::Methods
 
+  # Request specs
+  config.include RequestSpecHelper, type: :request
+
   # Truncates tables
   config.before(:suite) do 
     DatabaseCleaner.clean_with(:truncation)
