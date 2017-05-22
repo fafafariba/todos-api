@@ -83,12 +83,12 @@ RSpec.describe 'Todos API', type: :request do
 			before { put "/todos/#{todo_id}", params: valid_attributes }
 
 			it 'updates the record' do
-				puts response.body
-				expect(response.body).to match(/Update Successful/)
+				updated_todo = Todo.find(todo_id)
+				expect(updated_todo.title).to match(/Do groceries/)
 			end
 
 			it 'returns status code 204' do
-				expect(response).to have_http_status(200)
+				expect(response).to have_http_status(204)
 			end
 		end
 	end
@@ -96,13 +96,12 @@ RSpec.describe 'Todos API', type: :request do
 	describe 'DELETE /todos/:id' do
 		before { delete "/todos/#{todo_id}" }
 
-		it 'deletes the recrod' do
-			puts response.body
+		it 'deletes the record' do
 			expect(response.body).to match(/Delete Successful/)
 		end
 		
 
-		it 'returns status code 204' do
+		it 'returns status code 200' do
 			expect(response).to have_http_status(200)
 		end
 	end

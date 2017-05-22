@@ -18,7 +18,7 @@ class TodosController < ApplicationController
 	
 	def update
 		@todo.update(todo_params)
-		render json: "Update Successful", status: 200
+		head :no_content
 	end
 	
 	def destroy
