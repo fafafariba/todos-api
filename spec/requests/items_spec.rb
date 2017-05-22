@@ -15,7 +15,7 @@ RSpec.describe 'Items API' do
 			end
 			
 			it 'returns all todo items' do
-				expect(json.size).to eq(20)
+				expect(json_parse.size).to eq(20)
 			end
 		end
 		
@@ -41,7 +41,7 @@ RSpec.describe 'Items API' do
 			end
 			
 			it 'returns the item' do
-				expect(json['id']).to eq(id)
+				expect(json_parse['id']).to eq(id)
 			end
 		end
 		

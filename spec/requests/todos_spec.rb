@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Todos API', type: :request do
 	# Initialize test data
-	let!(:todos) { create_list(:todo, 10) }
+	let(:user) { create(:user) }
+	let!(:todos) { create_list(:todo, 10, created_by: user.id.to_s) }
 	let(:todo_id) { todos.first.id }
 	
 	describe 'GET /todos' do
@@ -11,8 +12,8 @@ RSpec.describe 'Todos API', type: :request do
 
 		it 'returns todos' do
 			# `json` custom helper to parse JSON res
-			expect(json).not_to be_empty
-			expect(json.size).to eq(10)
+			expect(json_parse).not_to be_empty
+			expect(json_parse.size).to eq(10)
 		end
 
 		it 'returns status code 200' do
@@ -26,8 +27,8 @@ RSpec.describe 'Todos API', type: :request do
 		context 'when the record exists' do
 			it 'returns the todo' do
 				# `json` custom helper to parse JSON res
-				expect(json).not_to be_empty
-				expect(json['id']).to eq(todo_id)
+				expect(json_parse).not_to be_empty
+				expect(json_parse['id']).to eq(todo_id)
 			end
 
 			it 'returns status code 200' do
@@ -49,13 +50,13 @@ RSpec.describe 'Todos API', type: :request do
 	end
 	
 	describe 'POST /todos' do
-		let(:valid_attributes) { { title: 'Learn Python', created_by: '1' } }
+		let(:valid_attributes) { { title: 'Learn Python', created_by: user.id.to_s } }
 
 		context 'when the request is valid' do
 			before { post '/todos', params: valid_attributes }
 
 			it 'creates a todo' do
-				expect(json['title']).to eq('Learn Python')
+				expect(json_parse['title']).to eq('Learn Python')
 			end
 			
 			it 'returns status code 201' do
@@ -64,7 +65,7 @@ RSpec.describe 'Todos API', type: :request do
 		end
 
 		context 'when the request is invalid' do
-			before { post '/todos', params: { created_by: '1' } }
+			before { post '/todos', params: { created_by: user.id.to_s } }
 
 			it 'returns status code 422' do 
 				expect(response).to have_http_status(422)
