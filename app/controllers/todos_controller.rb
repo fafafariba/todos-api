@@ -8,6 +8,7 @@ class TodosController < ApplicationController
 	end
 	
 	def create
+		puts "current_user #{current_user}"
 		@todo = current_user.todos.create!(todo_params)
 		json_response(@todo, :created)
 	end

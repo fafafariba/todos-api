@@ -14,6 +14,8 @@ class JsonWebToken
 	def self.decode(token)
 		# Get payload; first index in decoded array
 		body = JWT.decode(token, HMAC_SECRET)[0]
+
+		# ActiveRecord, Implements hash where keys :foo and "foo" are considered the same
 		HashWithIndifferentAccess.new(body)
 		# Rescue
 	rescue JWT::ExpiredSignature, JWT::VerificationError => e 

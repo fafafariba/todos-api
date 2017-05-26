@@ -30,6 +30,6 @@ class Message
 	end
 
 	def self.expired_token
-		"Sorry, your oek has expired. Please login to continue"
+		"Sorry, your token has expired. Please login to continue"
 	end
 end

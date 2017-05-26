@@ -4,11 +4,12 @@ RSpec.describe 'Todos API', type: :request do
 	# Initialize test data
 	let(:user) { create(:user) }
 	let!(:todos) { create_list(:todo, 10, created_by: user.id.to_s) }
-	let(:todo_id) { todos.first.id }
+  let(:todo_id) { todos.first.id }
+  let(:headers) { valid_headers }
 	
 	describe 'GET /todos' do
 		# Make HTTP GET request before each example
-		before { get '/todos' }
+    before { get '/todos', params: {}, headers: headers }
 
 		it 'returns todos' do
 			# `json` custom helper to parse JSON res
@@ -22,7 +23,7 @@ RSpec.describe 'Todos API', type: :request do
 	end
 	
 	describe 'GET /todos/:id' do
-		before { get "/todos/#{todo_id}" }
+    before { get "/todos/#{todo_id}", params: {}, headers: headers }
 
 		context 'when the record exists' do
 			it 'returns the todo' do
@@ -50,10 +51,10 @@ RSpec.describe 'Todos API', type: :request do
 	end
 	
 	describe 'POST /todos' do
-		let(:valid_attributes) { { title: 'Learn Python', created_by: user.id.to_s } }
+		let(:valid_attributes) { { title: 'Learn Python', created_by: user.id }.to_json }
 
 		context 'when the request is valid' do
-			before { post '/todos', params: valid_attributes }
+			before { post '/todos', params: valid_attributes, headers: headers }
 
 			it 'creates a todo' do
 				expect(json_parse['title']).to eq('Learn Python')
@@ -65,7 +66,7 @@ RSpec.describe 'Todos API', type: :request do
 		end
 
 		context 'when the request is invalid' do
-			before { post '/todos', params: { created_by: user.id.to_s } }
+			before { post '/todos', params: { created_by: user.id }.to_json, headers: headers }
 
 			it 'returns status code 422' do 
 				expect(response).to have_http_status(422)
@@ -78,10 +79,10 @@ RSpec.describe 'Todos API', type: :request do
 	end
 	
 	describe 'PUT /todos/:id' do 
-		let(:valid_attributes) { { title: 'Do groceries' } }
+		let(:valid_attributes) { { title: 'Do groceries' }.to_json }
 
 		context 'when the record exists do' do
-			before { put "/todos/#{todo_id}", params: valid_attributes }
+			before { put "/todos/#{todo_id}", params: valid_attributes, headers: headers }
 
 			it 'updates the record' do
 				updated_todo = Todo.find(todo_id)
@@ -95,7 +96,7 @@ RSpec.describe 'Todos API', type: :request do
 	end
 	
 	describe 'DELETE /todos/:id' do
-		before { delete "/todos/#{todo_id}" }
+		before { delete "/todos/#{todo_id}", params: {}, headers: headers }
 
 		it 'deletes the record' do
 			expect(response.body).to match(/Delete Successful/)
